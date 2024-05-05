@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: gym-api
+  jpa:
+    hibernate:
+      ddl-auto: update
+    database-platform: org.hibernate.dialect.MySQL8Dialect
+  datasource:
+    url: jdbc:mysql://localhost:3306/gym?useSSL=false&serverTimezone=UTC
+    username: root
+    password: root
+
+
+
