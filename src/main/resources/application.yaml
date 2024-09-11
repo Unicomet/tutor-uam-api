@@ -5,8 +5,9 @@ spring:
     hibernate:
       ddl-auto: update
     database-platform: org.hibernate.dialect.MySQL8Dialect
+    show-sql: true
   datasource:
-    url: jdbc:mysql://localhost:3306/gym?useSSL=false&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/asesoria_db?useSSL=false&serverTimezone=UTC
     username: root
     password: root
 

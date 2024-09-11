@@ -46,13 +46,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                         userDetails, null, userDetails.getAuthorities() );
 
                 authToken.setDetails(new WebAuthenticationDetailsSource().buildDetails(request));
-
                 SecurityContextHolder.getContext().setAuthentication(authToken);
+                filterChain.doFilter(request, response);
             }
         }
-
-
-
     }
     /*
     Get token from headers of request
@@ -67,6 +64,4 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         return null;
 
     }
-
-
 }

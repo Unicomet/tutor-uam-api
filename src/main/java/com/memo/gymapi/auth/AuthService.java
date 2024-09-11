@@ -1,13 +1,17 @@
 package com.memo.gymapi.auth;
 
 
+import com.memo.gymapi.auth.exceptions.InvalidCredentialsException;
 import com.memo.gymapi.jwt.JwtService;
 import com.memo.gymapi.user.User;
 import com.memo.gymapi.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -24,23 +28,30 @@ public class AuthService {
     Authenticates the user and returns a token (JWT) if the user exists
      */
     public AuthResponse login(LoginRequest request) {
-        authenticationManager.authenticate(new UsernamePasswordAuthenticationToken(request.getUsername(), request.getPassword()));
-        UserDetails userDetails = userRepository.findByUsername(request.getUsername()).orElseThrow();
-        String token = jwtService.getToken(userDetails);
-        return AuthResponse.builder()
-                .token(token)
-                .build();
+        try {
+            Authentication authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(request.getEmail(), request.getPassword());
+
+            authenticationManager.authenticate(
+                authenticationRequest
+            );
+            UserDetails userDetails = userRepository.findByEmail(request.getEmail()).orElseThrow();
+            // Generate token and return response
+            String token = jwtService.getToken(userDetails);
+            return new AuthResponse(token);
+        } catch (AuthenticationException e) {
+            throw new InvalidCredentialsException("Invalid email or password");
+        }
     }
 
     public AuthResponse register(RegisterRequest request) {
-
         User user= User.builder()
-                .username(request.username)
+                .firstName(request.firstName)
+                .lastName(request.lastName)
+                .email(request.email)
                 .password(passwordEncoder.encode(request.password))
-                .firstname(request.firstname)
-                .lastname(request.lastname)
-                .rfc(request.rfc)
-                .role(request.role)
+                .faculty(request.faculty)
+                .ocupation(request.ocupation)
                 .build();
 
         userRepository.save(user);

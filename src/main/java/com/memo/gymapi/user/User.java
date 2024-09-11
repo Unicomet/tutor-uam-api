@@ -1,64 +1,78 @@
 package com.memo.gymapi.user;
 
+import jakarta.persistence.*;
+import lombok.*;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
+
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.core.userdetails.UserDetails;
-
-import jakarta.persistence.Basic;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.EnumType;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.UniqueConstraint;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-
-@Data
+@Getter
+@Setter
+@Entity
 @Builder
 @NoArgsConstructor
 @AllArgsConstructor
-@Entity
-@Table(name="user", uniqueConstraints = {@UniqueConstraint(columnNames = {"username"})})
+@Table(name = "usuario", uniqueConstraints = {
+        @UniqueConstraint(name = "correo", columnNames = {"correo"})
+})
 public class User implements UserDetails {
     @Id
-    @GeneratedValue
-    Integer id;
-    @Basic
-    @Column(nullable = false)
-    String username;
-    @Column(nullable = false)
-    String firstname;
-    String lastname;
-    String country;
-    String password;
-    String rfc;
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "_id")
+    private Integer id = 1;
+
+    @Column(name = "nombre", nullable = false, length = 100)
+    private String firstName;
+
+    @Column(name = "apellido_paterno", nullable = false, length = 45)
+    private String lastName;
+
+    @Column(name = "correo", nullable = false, length = 100)
+    private String email;
+
+    @Column(name = "contrasena", nullable = false, length = 60)
+    private String password;
+
+    @Column(name = "unidad_uam" )
     @Enumerated(EnumType.STRING)
-    Role role;
+    private Faculty faculty;
+
+    @Column(name = "ocupacion")
+    @Enumerated(EnumType.STRING)
+    private Ocupation ocupation;
 
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        return List.of(new SimpleGrantedAuthority((role.name())));
+        return List.of();
     }
+
+    @Override
+    public String getPassword() {
+        return password;
+    }
+
+    @Override
+    public String getUsername() {
+        return email;
+    }
+
     @Override
     public boolean isAccountNonExpired() {
         return true;
     }
+
     @Override
     public boolean isAccountNonLocked() {
         return true;
     }
+
     @Override
     public boolean isCredentialsNonExpired() {
         return true;
     }
+
     @Override
     public boolean isEnabled() {
         return true;
