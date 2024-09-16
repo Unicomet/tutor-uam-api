@@ -7,6 +7,7 @@ import java.util.List;
 @Getter
 @Setter
 public class TutorForListDto {
+    Integer id;
     String name;
     Float score;
     List<String> subjectNames;

@@ -36,6 +36,7 @@ public class TutorService {
         for ( Tutor tutor: listTutors.getContent()) {
             TutorForListDto tutorForListDto = new TutorForListDto();
             User user = userRepository.getReferenceById(tutor.getUser().getId());
+            tutorForListDto.setId(tutor.getId());
             tutorForListDto.setName(user.getFirstName() + " " + user.getLastName());
             tutorForListDto.setScore(tutor.getScore());
             List<SubjectTutor> listSubjects = materiaAsesorRepository.findAllByTutor(tutor);
