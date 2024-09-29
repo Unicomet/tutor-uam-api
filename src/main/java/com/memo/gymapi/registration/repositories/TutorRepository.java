@@ -4,7 +4,7 @@ import com.memo.gymapi.tutors.model.Tutor;
 import com.memo.gymapi.user.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface AsesorRepository extends JpaRepository<Tutor, Long> {
+public interface TutorRepository extends JpaRepository<Tutor, Integer> {
     Tutor findByUser(User user);
     Tutor getAsesorByUser(User user);
 }

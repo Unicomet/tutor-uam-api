@@ -5,18 +5,20 @@ import com.memo.gymapi.tutors.model.Tutor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import lombok.ToString;
 
 import java.time.LocalTime;
 
 @Getter
 @Setter
 @Entity
+@ToString
 @Table(name = "disponibilidad")
 public class Availability {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "dia")
     @Enumerated(EnumType.STRING)

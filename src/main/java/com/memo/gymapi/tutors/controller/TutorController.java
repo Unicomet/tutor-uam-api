@@ -2,11 +2,10 @@ package com.memo.gymapi.tutors.controller;
 
 import com.memo.gymapi.tutors.dto.TutorsForListPaginatedDto;
 import com.memo.gymapi.tutors.service.TutorService;
+import jakarta.websocket.server.PathParam;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
@@ -21,8 +20,9 @@ public class TutorController {
     }
 
     @GetMapping("")
-    public ResponseEntity<TutorsForListPaginatedDto> geTutorByPage(Pageable pageable) {
-        TutorsForListPaginatedDto response = tutorService.getAllTutors(pageable);
+    public ResponseEntity<TutorsForListPaginatedDto> geTutorByPageNameAndSubject(@RequestParam String name, @RequestParam String subject, Pageable pageable) {
+        TutorsForListPaginatedDto response = tutorService.getTutors(name, subject, pageable);
         return ResponseEntity.ok().body(response);
     }
+
 }

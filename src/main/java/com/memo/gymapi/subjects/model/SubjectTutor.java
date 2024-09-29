@@ -16,7 +16,7 @@ public class SubjectTutor {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesor_id", nullable = false)

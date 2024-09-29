@@ -1,7 +1,7 @@
-package com.memo.gymapi.evaluation;
+package com.memo.gymapi.tutorships.model;
 
+import com.memo.gymapi.registration.model.Tutoree;
 import com.memo.gymapi.tutors.model.Tutor;
-import com.memo.gymapi.registration.model.Asesorado;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,7 +16,7 @@ import java.time.LocalDate;
         @Index(name = "fk_evaluacion_asesor_asesorado1_idx", columnList = "asesorado_id"),
         @Index(name = "fk_evaluacion_asesor_asesor1_idx", columnList = "asesor_id")
 })
-public class EvaluacionAsesorado {
+public class EvaluationTutoree {
     @Id
     @Column(name = "_id", nullable = false)
     private Integer id;
@@ -32,7 +32,7 @@ public class EvaluacionAsesorado {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesorado_id", nullable = false)
-    private Asesorado asesorado;
+    private Tutoree tutoree;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesor_id", nullable = false)

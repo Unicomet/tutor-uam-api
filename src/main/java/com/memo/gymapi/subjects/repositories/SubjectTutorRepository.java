@@ -6,6 +6,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import java.util.List;
 
-public interface MateriaAsesorRepository extends JpaRepository<SubjectTutor, Long> {
+public interface SubjectTutorRepository extends JpaRepository<SubjectTutor, Integer> {
     List<SubjectTutor> findAllByTutor(Tutor tutor);
 }

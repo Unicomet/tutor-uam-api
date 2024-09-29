@@ -9,5 +9,5 @@ import java.util.List;
 @Setter
 public class TutorsForListPaginatedDto {
     List<TutorForListDto> tutorForListDtoList;
-    Long totalElements;
+    Integer totalElements;
 }

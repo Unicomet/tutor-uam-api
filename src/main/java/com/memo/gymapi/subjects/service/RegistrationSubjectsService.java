@@ -3,15 +3,14 @@ package com.memo.gymapi.subjects.service;
 import com.memo.gymapi.subjects.dto.Day;
 import com.memo.gymapi.subjects.dto.DayAvailability;
 import com.memo.gymapi.subjects.dto.Period;
-import com.memo.gymapi.subjects.dto.RegistrateScheduleRequest;
 import com.memo.gymapi.subjects.model.Availability;
 import com.memo.gymapi.subjects.model.SubjectTutor;
 import com.memo.gymapi.subjects.repositories.AvailabilityRepository;
-import com.memo.gymapi.subjects.repositories.MateriaAsesorRepository;
+import com.memo.gymapi.subjects.repositories.SubjectTutorRepository;
 import com.memo.gymapi.subjects.repositories.SubjectRepository;
 import com.memo.gymapi.tutors.model.Tutor;
 import com.memo.gymapi.subjects.model.Subject;
-import com.memo.gymapi.registration.repositories.AsesorRepository;
+import com.memo.gymapi.registration.repositories.TutorRepository;
 import com.memo.gymapi.user.User;
 import com.memo.gymapi.user.UserRepository;
 import org.springframework.security.core.Authentication;
@@ -27,15 +26,15 @@ import java.util.Map;
 public class RegistrationSubjectsService {
 
     private final UserRepository userRepository;
-    private final MateriaAsesorRepository materiaAsesorRepository;
-    private final AsesorRepository asesorRepository;
+    private final SubjectTutorRepository subjectTutorRepository;
+    private final TutorRepository tutorRepository;
     private final SubjectRepository subjectRepository;
     private final AvailabilityRepository availabilityRepository;
 
-    public RegistrationSubjectsService(UserRepository userRepository, MateriaAsesorRepository materiaAsesorRepository, AsesorRepository asesorRepository, SubjectRepository subjectRepository, AvailabilityRepository availabilityRepository, AvailabilityRepository availabilityRepository1) {
+    public RegistrationSubjectsService(UserRepository userRepository, SubjectTutorRepository subjectTutorRepository, TutorRepository tutorRepository, SubjectRepository subjectRepository, AvailabilityRepository availabilityRepository, AvailabilityRepository availabilityRepository1) {
         this.userRepository = userRepository;
-        this.materiaAsesorRepository = materiaAsesorRepository;
-        this.asesorRepository = asesorRepository;
+        this.subjectTutorRepository = subjectTutorRepository;
+        this.tutorRepository = tutorRepository;
         this.subjectRepository = subjectRepository;
         this.availabilityRepository = availabilityRepository1;
     }
@@ -46,7 +45,7 @@ public class RegistrationSubjectsService {
         Integer id = userAuthentication.getId();
         User userDB = userRepository.findById(id).orElseThrow();
 
-            Tutor tutor = asesorRepository.findByUser(userDB);
+            Tutor tutor = tutorRepository.findByUser(userDB);
             ArrayList<SubjectTutor> subjects  = new ArrayList<>(subjectsNames.size());
 
             for(String subjectName : subjectsNames) {
@@ -63,7 +62,7 @@ public class RegistrationSubjectsService {
                 subjectTutor.setTutor(tutor);
                 subjects.add(subjectTutor);
             }
-            materiaAsesorRepository.saveAll(subjects);
+            subjectTutorRepository.saveAll(subjects);
 
 
     }
@@ -74,7 +73,10 @@ public class RegistrationSubjectsService {
         User userAuthentication = (User) authentication.getPrincipal();
         User userDB = userRepository.findById(userAuthentication.getId()).orElseThrow();
 
-        Tutor tutor = asesorRepository.getAsesorByUser(userDB);
+        Tutor tutor = tutorRepository.getAsesorByUser(userDB);
+        if(tutor==null){
+            throw new RuntimeException("Perfil de Asesor no encontrado");
+        }
 
         for (Map.Entry<Day, DayAvailability> entry : availability.entrySet() ) {
             Day day = entry.getKey();
@@ -97,21 +99,6 @@ public class RegistrationSubjectsService {
             e.printStackTrace();
         }
     }
-
-    public Boolean register(RegistrateScheduleRequest request) throws Exception {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-        String email = null;
-        if (authentication != null && authentication.isAuthenticated()) {
-            User user = (User) authentication.getPrincipal();
-            System.out.println(user.getEmail());
-//            userRepository.updateFacultyAndOcupationByEmail(user.getEmail(), request.getFacultyUAM(), request.getOcupation());
-            return true;
-        }
-
-        throw new Exception("Registration failed");
-    }
-
 
 
 }

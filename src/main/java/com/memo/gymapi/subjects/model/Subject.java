@@ -12,7 +12,7 @@ import org.hibernate.annotations.ColumnDefault;
 public class Subject {
     @Id
     @Column(name = "_clave", nullable = false)
-    private Long id;
+    private Integer id;
 
     @Column(name = "nombre", nullable = false, length = 100)
     private String nombre;

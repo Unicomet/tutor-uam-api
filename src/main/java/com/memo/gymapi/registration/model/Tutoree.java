@@ -15,11 +15,11 @@ import java.math.BigDecimal;
 @Table(name = "asesorado", indexes = {
         @Index(name = "fk_asesorado_usuario1_idx", columnList = "usuario_id")
 })
-public class Asesorado {
+public class Tutoree {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long id;
+    private Integer id;
 
     @Column(name = "calificacion", precision = 2)
     private BigDecimal score;

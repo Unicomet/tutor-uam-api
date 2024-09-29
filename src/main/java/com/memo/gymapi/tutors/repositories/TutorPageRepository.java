@@ -1,4 +1,4 @@
-package com.memo.gymapi.tutors.repository;
+package com.memo.gymapi.tutors.repositories;
 
 import com.memo.gymapi.tutors.model.Tutor;
 import org.springframework.data.domain.Page;
@@ -8,6 +8,6 @@ import org.springframework.stereotype.Repository;
 
 
 @Repository
-public interface TutorRepository extends PagingAndSortingRepository<Tutor, Long> {
+public interface TutorPageRepository extends PagingAndSortingRepository<Tutor, Integer> {
     Page<Tutor> findAll(Pageable pageable);
 }

@@ -1,9 +1,9 @@
 package com.memo.gymapi.registration.service;
 
+import com.memo.gymapi.registration.model.Tutoree;
+import com.memo.gymapi.registration.repositories.TutoreeRepository;
 import com.memo.gymapi.tutors.model.Tutor;
-import com.memo.gymapi.registration.model.Asesorado;
-import com.memo.gymapi.registration.repositories.AsesorRepository;
-import com.memo.gymapi.registration.repositories.AsesoradoRepository;
+import com.memo.gymapi.registration.repositories.TutorRepository;
 import com.memo.gymapi.registration.requests.RegistrationRequest;
 import com.memo.gymapi.user.User;
 import com.memo.gymapi.user.UserRepository;
@@ -17,13 +17,13 @@ import java.util.Objects;
 public class RegistrationService {
 
     private final UserRepository userRepository;
-    private final AsesoradoRepository asesoradoRepository;
-    private final AsesorRepository asesorRepository;
+    private final TutoreeRepository tutoreeRepository;
+    private final TutorRepository tutorRepository;
 
-    public RegistrationService(UserRepository userRepository, AsesoradoRepository asesoradoRepository, AsesorRepository asesorRepository) {
+    public RegistrationService(UserRepository userRepository, TutoreeRepository tutoreeRepository, TutorRepository tutorRepository) {
         this.userRepository = userRepository;
-        this.asesoradoRepository = asesoradoRepository;
-        this.asesorRepository = asesorRepository;
+        this.tutorRepository = tutorRepository;
+        this.tutoreeRepository = tutoreeRepository;
     }
 
     public Boolean register(RegistrationRequest request) throws Exception {
@@ -47,11 +47,11 @@ public class RegistrationService {
 
         //TODO: Refactor this, include exception handling
         if(Objects.equals(request.getRoleTutorship().toString(), "Asesorado")){
-            Asesorado asesorado = Asesorado.builder().user(user).build();
-            asesoradoRepository.save(asesorado);
+            Tutoree tutoree = Tutoree.builder().user(user).build();
+            tutoreeRepository.save(tutoree);
         }else if(Objects.equals(request.getRoleTutorship().toString(), "Asesor")){
             Tutor tutor = Tutor.builder().user(user).degree(request.getStudyField()).description(request.getDescription()).studyField(request.getStudyField()).build();
-            asesorRepository.save(tutor);
+            tutorRepository.save(tutor);
         }
     }
 }

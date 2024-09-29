@@ -16,15 +16,15 @@ public class RegistrationSubjectsController {
 
     private final RegistrationSubjectsService registrationSubjectsService;
 
-    @PostMapping(consumes="application/json")
-    public ResponseEntity<Void> register(  @RequestBody RegistrateScheduleRequest request) throws Exception {
+    @PostMapping (consumes="application/json")
+    public ResponseEntity<String> register(  @RequestBody RegistrateScheduleRequest request) throws Exception {
         try{
             System.out.println("Registering subjects");
             registrationSubjectsService.registerAvailability(request.getAvailability());
             registrationSubjectsService.registerSubjects(request.getSubjects());
             return ResponseEntity.ok().build();
         }catch (Exception e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).build();
+            return new ResponseEntity<String>(e.getMessage(),HttpStatus.BAD_REQUEST);
         }
     }
 }
