@@ -1,7 +1,7 @@
 package com.memo.gymapi.registration.repositories;
 
 import com.memo.gymapi.registration.model.Tutoree;
-import com.memo.gymapi.user.User;
+import com.memo.gymapi.user.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 

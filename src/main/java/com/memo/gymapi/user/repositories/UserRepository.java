@@ -1,5 +1,8 @@
-package com.memo.gymapi.user;
+package com.memo.gymapi.user.repositories;
 
+import com.memo.gymapi.user.model.Faculty;
+import com.memo.gymapi.user.model.Ocupation;
+import com.memo.gymapi.user.model.User;
 import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -14,7 +17,7 @@ public interface UserRepository extends JpaRepository<User, Integer> {
     @Transactional
     @Modifying
     @Query("UPDATE User SET faculty=:faculty, ocupation=:ocupation WHERE email=:email")
-    void updateFacultyAndOcupationByEmail(@Param("email") String email , @Param("faculty") Faculty faculty, @Param("ocupation") Ocupation ocupation);
+    void updateFacultyAndOcupationByEmail(@Param("email") String email, @Param("faculty") Faculty faculty, @Param("ocupation") Ocupation ocupation);
 }
 
 

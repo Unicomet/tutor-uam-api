@@ -1,4 +1,4 @@
-package com.memo.gymapi.user;
+package com.memo.gymapi.user.model;
 
 import jakarta.persistence.*;
 import lombok.*;
@@ -35,7 +35,7 @@ public class User implements UserDetails {
     @Column(name = "contrasena", nullable = false, length = 60)
     private String password;
 
-    @Column(name = "unidad_uam" )
+    @Column(name = "unidad_uam")
     @Enumerated(EnumType.STRING)
     private Faculty faculty;
 

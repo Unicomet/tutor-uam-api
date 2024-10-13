@@ -13,4 +13,6 @@ public interface TutorShipRepository extends CrudRepository<Tutorship, Integer> 
     Boolean existsByDateTime(LocalDateTime dateTime);
 
     List<Tutorship> findAllByTutoreeId(Integer tutoreeId);
+
+    List<Tutorship> findAllByTutorId(Integer tutorId);
 }

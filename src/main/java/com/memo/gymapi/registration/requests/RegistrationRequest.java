@@ -1,9 +1,9 @@
 package com.memo.gymapi.registration.requests;
 
 import com.memo.gymapi.registration.model.EducationLevel;
-import com.memo.gymapi.user.Faculty;
-import com.memo.gymapi.user.Ocupation;
-import com.memo.gymapi.user.Role;
+import com.memo.gymapi.user.model.Faculty;
+import com.memo.gymapi.user.model.Ocupation;
+import com.memo.gymapi.user.model.Role;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -20,4 +20,5 @@ public class RegistrationRequest {
     Ocupation ocupation;
     Role roleTutorship;
     String studyField;
+    String tutorshipPlace;
 }

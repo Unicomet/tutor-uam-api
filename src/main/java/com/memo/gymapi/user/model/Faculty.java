@@ -1,4 +1,4 @@
-package com.memo.gymapi.user;
+package com.memo.gymapi.user.model;
 
 public enum Faculty {
     Azcapotzalco,

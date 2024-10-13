@@ -1,6 +1,6 @@
 package com.memo.gymapi.registration.model;
 
-import com.memo.gymapi.user.User;
+import com.memo.gymapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 

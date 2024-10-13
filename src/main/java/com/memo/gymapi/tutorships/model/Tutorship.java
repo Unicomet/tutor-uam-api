@@ -33,4 +33,8 @@ public class Tutorship {
 
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime dateTime;
+
+    @Column(name = "asesoria_presencial", nullable = false, length = 20)
+    private Boolean isTutorshipInPerson;
+
 }

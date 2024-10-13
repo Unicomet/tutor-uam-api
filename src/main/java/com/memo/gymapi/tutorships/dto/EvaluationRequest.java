@@ -6,7 +6,7 @@ import lombok.Data;
 
 @Builder
 @Data
-public class EvaluationTutorRequest {
+public class EvaluationRequest {
     Integer rating;
     String description;
     Integer tutorshipId;

@@ -16,4 +16,5 @@ public class BookRequest {
     LocalDate date;
     LocalTime startTime;
     Integer tutorId;
+    Boolean isTutorshipInPerson;
 }

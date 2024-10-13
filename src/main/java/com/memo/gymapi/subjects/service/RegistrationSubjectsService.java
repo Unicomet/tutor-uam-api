@@ -1,18 +1,18 @@
 package com.memo.gymapi.subjects.service;
 
+import com.memo.gymapi.registration.repositories.TutorRepository;
 import com.memo.gymapi.subjects.dto.Day;
 import com.memo.gymapi.subjects.dto.DayAvailability;
 import com.memo.gymapi.subjects.dto.Period;
 import com.memo.gymapi.subjects.model.Availability;
+import com.memo.gymapi.subjects.model.Subject;
 import com.memo.gymapi.subjects.model.SubjectTutor;
 import com.memo.gymapi.subjects.repositories.AvailabilityRepository;
-import com.memo.gymapi.subjects.repositories.SubjectTutorRepository;
 import com.memo.gymapi.subjects.repositories.SubjectRepository;
+import com.memo.gymapi.subjects.repositories.SubjectTutorRepository;
 import com.memo.gymapi.tutors.model.Tutor;
-import com.memo.gymapi.subjects.model.Subject;
-import com.memo.gymapi.registration.repositories.TutorRepository;
-import com.memo.gymapi.user.User;
-import com.memo.gymapi.user.UserRepository;
+import com.memo.gymapi.user.model.User;
+import com.memo.gymapi.user.repositories.UserRepository;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
@@ -45,24 +45,24 @@ public class RegistrationSubjectsService {
         Integer id = userAuthentication.getId();
         User userDB = userRepository.findById(id).orElseThrow();
 
-            Tutor tutor = tutorRepository.findByUser(userDB);
-            ArrayList<SubjectTutor> subjects  = new ArrayList<>(subjectsNames.size());
+        Tutor tutor = tutorRepository.findByUser(userDB);
+        ArrayList<SubjectTutor> subjects = new ArrayList<>(subjectsNames.size());
 
-            for(String subjectName : subjectsNames) {
+        for (String subjectName : subjectsNames) {
 //            Subject subject = new Subject();
 //            subject.setNombre(subjectName);
 //            subject.setId(clave);
 //            subject.setAsesorId(tutor);
-                Subject findSubject = subjectRepository.findByNombre(subjectName);
-                if(findSubject == null){
-                    throw new Exception("Subject not found");
-                }
-                SubjectTutor subjectTutor = new SubjectTutor();
-                subjectTutor.setSubjectClave(findSubject);
-                subjectTutor.setTutor(tutor);
-                subjects.add(subjectTutor);
+            Subject findSubject = subjectRepository.findByNombre(subjectName);
+            if (findSubject == null) {
+                throw new Exception("Subject not found");
             }
-            subjectTutorRepository.saveAll(subjects);
+            SubjectTutor subjectTutor = new SubjectTutor();
+            subjectTutor.setSubjectClave(findSubject);
+            subjectTutor.setTutor(tutor);
+            subjects.add(subjectTutor);
+        }
+        subjectTutorRepository.saveAll(subjects);
 
 
     }
@@ -74,15 +74,15 @@ public class RegistrationSubjectsService {
         User userDB = userRepository.findById(userAuthentication.getId()).orElseThrow();
 
         Tutor tutor = tutorRepository.getAsesorByUser(userDB);
-        if(tutor==null){
+        if (tutor == null) {
             throw new RuntimeException("Perfil de Asesor no encontrado");
         }
 
-        for (Map.Entry<Day, DayAvailability> entry : availability.entrySet() ) {
+        for (Map.Entry<Day, DayAvailability> entry : availability.entrySet()) {
             Day day = entry.getKey();
             DayAvailability dayAvailability = entry.getValue();
-            if(dayAvailability.isEnabled()){
-                for (Period period : dayAvailability.getPeriods() ) {
+            if (dayAvailability.isEnabled()) {
+                for (Period period : dayAvailability.getPeriods()) {
                     Availability availabilityEntity = new Availability();
                     availabilityEntity.setDay(day);
                     availabilityEntity.setTutor(tutor);
@@ -93,9 +93,9 @@ public class RegistrationSubjectsService {
             }
         }
 
-        try{
+        try {
             availabilityRepository.saveAll(availabilities);
-        }catch (Exception e){
+        } catch (Exception e) {
             e.printStackTrace();
         }
     }

@@ -1,11 +1,9 @@
 package com.memo.gymapi.tutors.model;
 
 import com.memo.gymapi.subjects.model.Availability;
-import com.memo.gymapi.user.User;
+import com.memo.gymapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
-
-import java.math.BigDecimal;
 
 @Getter
 @Setter
@@ -44,4 +42,6 @@ public class Tutor {
     @JoinColumn(name = "disponibilidad")
     private Availability availability;
 
+    @Column(name = "lugar_asesorias", nullable = false, length = 50)
+    private String tutorshipPlace;
 }
