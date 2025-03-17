@@ -1,17 +1,15 @@
 package com.memo.gymapi.auth;
 
 
-import com.memo.gymapi.auth.exceptions.InvalidCredentialsException;
 import com.memo.gymapi.jwt.JwtService;
-import com.memo.gymapi.registration.repositories.TutorRepository;
-import com.memo.gymapi.user.model.User;
+import com.memo.gymapi.user.model.UserEntity;
+import com.memo.gymapi.user.repositories.TutorRepository;
 import com.memo.gymapi.user.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -26,31 +24,29 @@ public class AuthService {
     private final TutorRepository tutorRepository;
 
     /*
-    Authenticates the user and returns a token (JWT) if the user exists
+    Authenticates the userEntity and returns a token (JWT) if the userEntity exists
      */
     public AuthResponse login(LoginRequest request) {
+        Authentication authenticationRequest =
+                UsernamePasswordAuthenticationToken.unauthenticated(request.getEmail(), request.getPassword());
+
         try {
-            Authentication authenticationRequest =
-                    UsernamePasswordAuthenticationToken.unauthenticated(request.getEmail(), request.getPassword());
-
             authenticationManager.authenticate(
-                    authenticationRequest
-            );
-
-            UserDetails userDetails = userRepository.findByEmail(request.getEmail()).orElseThrow();
-            // Generate token and return response
-            String token = jwtService.getToken(userDetails);
-            //Todo: Change the next line, it's not efficient
-            User user = userRepository.findByEmail(request.getEmail()).orElseThrow();
-
-            return AuthResponse.builder().token(token).isTutor(tutorRepository.existsByUserId(user.getId())).build();
-        } catch (AuthenticationException e) {
-            throw new InvalidCredentialsException("Invalid email or password");
+                    authenticationRequest);
+        } catch (Exception e) {
+            throw new EntityNotFoundException("Invalid credentials");
         }
+
+        UserEntity user = userRepository.findByEmail(request.getEmail()).orElseThrow(
+                () -> new EntityNotFoundException("User not found")
+        );
+        // Generate token and return response
+        String token = jwtService.getToken(user);
+        return AuthResponse.builder().token(token).isTutor(tutorRepository.existsByUserEntityId(user.getId())).build();
     }
 
     public AuthResponse register(RegisterRequest request) {
-        User user = User.builder()
+        UserEntity userEntity = UserEntity.builder()
                 .firstName(request.firstName)
                 .lastName(request.lastName)
                 .email(request.email)
@@ -59,10 +55,10 @@ public class AuthService {
                 .ocupation(request.ocupation)
                 .build();
 
-        userRepository.save(user);
+        userRepository.save(userEntity);
 
         return AuthResponse.builder()
-                .token(jwtService.getToken(user))
+                .token(jwtService.getToken(userEntity))
                 .build();
     }
 }
