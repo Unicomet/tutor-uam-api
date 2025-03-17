@@ -1,6 +1,6 @@
-package com.memo.gymapi.registration.requests;
+package com.memo.gymapi.user.dto;
 
-import com.memo.gymapi.registration.model.EducationLevel;
+import com.memo.gymapi.user.model.EducationLevel;
 import com.memo.gymapi.user.model.Faculty;
 import com.memo.gymapi.user.model.Ocupation;
 import com.memo.gymapi.user.model.Role;
