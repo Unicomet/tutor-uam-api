@@ -1,6 +1,6 @@
 package com.memo.gymapi.tutorships.model;
 
-import com.memo.gymapi.registration.model.Tutoree;
+import com.memo.gymapi.tutors.model.TutorEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -10,11 +10,10 @@ import lombok.*;
 @Builder
 @AllArgsConstructor
 @NoArgsConstructor
-@Table(name = "evaluacion_asesorado", indexes = {
-        @Index(name = "fk_evaluacion_asesor_asesorado1_idx", columnList = "asesorado_id"),
+@Table(name = "evaluacion_asesor", indexes = {
         @Index(name = "fk_evaluacion_asesor_asesor1_idx", columnList = "asesor_id")
 })
-public class EvaluationTutoree {
+public class EvaluationTutorEntity {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,10 +26,11 @@ public class EvaluationTutoree {
     private String descripcion;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(name = "asesorado_id", nullable = false)
-    private Tutoree tutoree;
+    @JoinColumn(name = "asesor_id", nullable = false)
+    private TutorEntity tutorEntity;
 
     @OneToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesoria_id", nullable = false)
-    private Tutorship tutorship;
+    private TutorshipEntity tutorshipEntity;
+
 }

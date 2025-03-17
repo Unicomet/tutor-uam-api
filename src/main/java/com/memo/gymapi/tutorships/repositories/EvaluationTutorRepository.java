@@ -1,10 +1,10 @@
 package com.memo.gymapi.tutorships.repositories;
 
-import com.memo.gymapi.tutorships.model.EvaluationTutor;
+import com.memo.gymapi.tutorships.model.EvaluationTutorEntity;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface EvaluationTutorRepository extends JpaRepository<EvaluationTutor, Integer> {
+public interface EvaluationTutorRepository extends JpaRepository<EvaluationTutorEntity, Integer> {
 
-    Boolean existsEvaluationTutorByTutorshipId(Integer tutorshipId);
+    Boolean existsEvaluationTutorByTutorshipEntityId(Integer tutorshipId);
 
 }

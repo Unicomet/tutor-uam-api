@@ -1,6 +1,6 @@
 package com.memo.gymapi.tutorships.dto;
 
-import com.memo.gymapi.tutorships.model.Tutorship;
+import com.memo.gymapi.tutorships.model.TutorshipEntity;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -13,5 +13,5 @@ import java.util.List;
 @Setter
 @Getter
 public class TutorshipsListResponse {
-    List<Tutorship> tutorships;
+    List<TutorshipEntity> tutorshipEntities;
 }

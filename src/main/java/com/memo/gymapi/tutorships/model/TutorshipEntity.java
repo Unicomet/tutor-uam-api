@@ -1,7 +1,7 @@
 package com.memo.gymapi.tutorships.model;
 
-import com.memo.gymapi.registration.model.Tutoree;
-import com.memo.gymapi.tutors.model.Tutor;
+import com.memo.gymapi.tutors.model.TutorEntity;
+import com.memo.gymapi.user.model.TutoreeEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -17,7 +17,7 @@ import java.time.LocalDateTime;
         @Index(name = "fk_asesoria_asesor2_idx", columnList = "asesor_id"),
         @Index(name = "fk_asesoria_asesorado2_idx", columnList = "asesorado_id")
 })
-public class Tutorship {
+public class TutorshipEntity {
     @Id
     @Column(name = "_id")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -25,11 +25,11 @@ public class Tutorship {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesor_id", nullable = false)
-    private Tutor tutor;
+    private TutorEntity tutorEntity;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesorado_id", nullable = false)
-    private Tutoree tutoree;
+    private TutoreeEntity tutoree;
 
     @Column(name = "fecha_hora", nullable = false)
     private LocalDateTime dateTime;

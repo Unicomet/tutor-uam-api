@@ -1,22 +1,22 @@
 package com.memo.gymapi.tutorships.service;
 
-import com.memo.gymapi.registration.model.Tutoree;
-import com.memo.gymapi.registration.repositories.TutorRepository;
-import com.memo.gymapi.registration.repositories.TutoreeRepository;
-import com.memo.gymapi.subjects.dto.Day;
-import com.memo.gymapi.subjects.model.Availability;
-import com.memo.gymapi.subjects.repositories.AvailabilityRepository;
-import com.memo.gymapi.tutors.model.Tutor;
+import com.memo.gymapi.tutors.model.Availability;
+import com.memo.gymapi.tutors.model.Day;
+import com.memo.gymapi.tutors.model.TutorEntity;
+import com.memo.gymapi.tutors.repositories.AvailabilityRepository;
 import com.memo.gymapi.tutorships.dto.BookRequest;
 import com.memo.gymapi.tutorships.dto.EvaluationRequest;
 import com.memo.gymapi.tutorships.dto.TutorshipsListResponse;
-import com.memo.gymapi.tutorships.model.EvaluationTutor;
-import com.memo.gymapi.tutorships.model.EvaluationTutoree;
-import com.memo.gymapi.tutorships.model.Tutorship;
+import com.memo.gymapi.tutorships.model.EvaluationTutorEntity;
+import com.memo.gymapi.tutorships.model.EvaluationTutoreeEntity;
+import com.memo.gymapi.tutorships.model.TutorshipEntity;
 import com.memo.gymapi.tutorships.repositories.EvaluationTutorRepository;
 import com.memo.gymapi.tutorships.repositories.EvaluationTutoreeRepository;
 import com.memo.gymapi.tutorships.repositories.TutorShipRepository;
-import com.memo.gymapi.user.model.User;
+import com.memo.gymapi.user.model.TutoreeEntity;
+import com.memo.gymapi.user.model.UserEntity;
+import com.memo.gymapi.user.repositories.TutorRepository;
+import com.memo.gymapi.user.repositories.TutoreeRepository;
 import com.memo.gymapi.user.repositories.UserRepository;
 import com.resend.Resend;
 import com.resend.core.exception.ResendException;
@@ -64,36 +64,36 @@ public class TutorshipService {
         if (dateTime.isBefore(LocalDateTime.now())) {
             throw new RuntimeException("The date and time must be after now");
         }
-        //Verify that the datetime is in range of the availability of the tutor
+        //Verify that the datetime is in range of the availability of the tutorEntity
         String dayNameSpanish = date.getDayOfWeek().getDisplayName(TextStyle.FULL, new Locale("es", "ES"));
         String dayNameSpanishFormatted = dayNameSpanish.substring(0, 1).toUpperCase() + dayNameSpanish.substring(1).toLowerCase();
-        Tutor tutor = tutorRepository.getReferenceById(request.getTutorId());
-        List<Availability> availability = availabilityRepository.findSchedulesWithinTime(time, Day.valueOf(dayNameSpanishFormatted), tutor);
+        TutorEntity tutorEntity = tutorRepository.getReferenceById(request.getTutorId());
+        List<Availability> availability = availabilityRepository.findSchedulesWithinTime(time, Day.valueOf(dayNameSpanishFormatted), tutorEntity);
 
         if (availability.isEmpty()) {
-            throw new RuntimeException("The tutor is not available at the requested time");
+            throw new RuntimeException("The tutorEntity is not available at the requested time");
         }
 
         for (Availability availability1 : availability
         ) {
             System.out.println(availability1.toString());
         }
-        //Verify that not another tutorship is already reserved for the same date and time
+        //Verify that not another tutorshipEntity is already reserved for the same date and time
         if (tutorShipRepository.existsByDateTime(dateTime)) {
-            throw new RuntimeException("The tutorship is already reserved");
+            throw new RuntimeException("The tutorshipEntity is already reserved");
         }
 
-        //Schedule the tutorship
+        //Schedule the tutorshipEntity
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        User userDb = userRepository.getReferenceById(user.getId());
-        Tutoree tutoree = tutoreeRepository.findByUser(userDb);
-        Tutorship tutorshipToSchedule = Tutorship.builder().dateTime(dateTime).tutoree(tutoree).tutor(tutor).isTutorshipInPerson(request.getIsTutorshipInPerson()).build();
-        tutorShipRepository.save(tutorshipToSchedule);
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        UserEntity userEntityDb = userRepository.getReferenceById(userEntity.getId());
+        TutoreeEntity tutoree = tutoreeRepository.findByUserEntity(userEntityDb);
+        TutorshipEntity tutorshipEntityToSchedule = TutorshipEntity.builder().dateTime(dateTime).tutoree(tutoree).tutorEntity(tutorEntity).isTutorshipInPerson(request.getIsTutorshipInPerson()).build();
+        tutorShipRepository.save(tutorshipEntityToSchedule);
 
         //Enviar correos al asesor y asesorado
-        String emailTutoree = userDb.getEmail();
-        String emailTutor = tutor.getUser().getEmail();
+        String emailTutoree = userEntityDb.getEmail();
+        String emailTutor = tutorEntity.getUserEntity().getEmail();
 
         Resend resend = new Resend("re_8jA8GTEt_NLeXHJCd86wFZncDwrP36yBg");
 
@@ -134,36 +134,36 @@ public class TutorshipService {
 
     public TutorshipsListResponse getTutorshipsForTutoree() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        Integer asesoradoId = tutoreeRepository.findIdByUserId(user.getId()).orElseThrow(
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        Integer asesoradoId = tutoreeRepository.findIdByUserId(userEntity.getId()).orElseThrow(
                 () -> new RuntimeException("El usuario no es un asesorado")
         );
 
-        List<Tutorship> tutorships = tutorShipRepository.findAllByTutoreeId(asesoradoId);
-        if (tutorships.isEmpty()) {
+        List<TutorshipEntity> tutorshipEntities = tutorShipRepository.findAllByTutoreeId(asesoradoId);
+        if (tutorshipEntities.isEmpty()) {
             return new TutorshipsListResponse();
         }
 
         TutorshipsListResponse tutorshipResponse = new TutorshipsListResponse();
-        tutorshipResponse.setTutorships(tutorships);
+        tutorshipResponse.setTutorshipEntities(tutorshipEntities);
 
         return tutorshipResponse;
     }
-    
+
     public TutorshipsListResponse getTutorshipsForTutor() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        User user = (User) authentication.getPrincipal();
-        Integer tutorId = tutorRepository.findIdByUserId(user.getId()).orElseThrow(
+        UserEntity userEntity = (UserEntity) authentication.getPrincipal();
+        Integer tutorId = tutorRepository.findIdByUserId(userEntity.getId()).orElseThrow(
                 () -> new RuntimeException("El usuario no es un asesor")
         );
 
-        List<Tutorship> tutorships = tutorShipRepository.findAllByTutorId(tutorId);
-        if (tutorships.isEmpty()) {
+        List<TutorshipEntity> tutorshipEntities = tutorShipRepository.findAllByTutorEntityId(tutorId);
+        if (tutorshipEntities.isEmpty()) {
             return new TutorshipsListResponse();
         }
 
         TutorshipsListResponse tutorshipResponse = new TutorshipsListResponse();
-        tutorshipResponse.setTutorships(tutorships);
+        tutorshipResponse.setTutorshipEntities(tutorshipEntities);
 
         return tutorshipResponse;
     }
@@ -171,62 +171,62 @@ public class TutorshipService {
     public void evaluateTutorForTutorship(EvaluationRequest request) {
 
 
-        Tutorship tutorship = tutorShipRepository.findById(request.getTutorshipId()).orElseThrow(
+        TutorshipEntity tutorshipEntity = tutorShipRepository.findById(request.getTutorshipId()).orElseThrow(
                 () -> new RuntimeException("La tutoría no existe")
         );
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Tutoree tutoree = tutoreeRepository.findByUser(user);
+        UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TutoreeEntity tutoree = tutoreeRepository.findByUserEntity(userEntity);
 
         if (tutoree == null) {
             throw new RuntimeException("El usuario no es un asesorado, no puede calificar a un asesor");
         }
 
-        if (!Objects.equals(tutorship.getTutoree().getId(), tutoree.getId())) {
+        if (!Objects.equals(tutorshipEntity.getTutoree().getId(), tutoree.getId())) {
             throw new RuntimeException("La evaluación de esta tutoría no corresponde a este asesorado");
         }
 
-        if (evaluationTutorRepository.existsEvaluationTutorByTutorshipId(tutorship.getId())) {
+        if (evaluationTutorRepository.existsEvaluationTutorByTutorshipEntityId(tutorshipEntity.getId())) {
             throw new RuntimeException("La tutoría ya ha sido evaluada");
         }
 
-        EvaluationTutor evaluationTutor = EvaluationTutor.builder()
+        EvaluationTutorEntity evaluationTutor = EvaluationTutorEntity.builder()
                 .calificacion(request.getRating())
                 .descripcion(request.getDescription())
-                .tutor(tutorship.getTutor())
-                .tutorship(tutorship)
+                .tutorEntity(tutorshipEntity.getTutorEntity())
+                .tutorshipEntity(tutorshipEntity)
                 .build();
 
         evaluationTutorRepository.save(evaluationTutor);
     }
 
     public void evaluateTutoreeForTutorship(EvaluationRequest request) {
-        Tutorship tutorship = tutorShipRepository.findById(request.getTutorshipId()).orElseThrow(
+        TutorshipEntity tutorshipEntity = tutorShipRepository.findById(request.getTutorshipId()).orElseThrow(
                 () -> new RuntimeException("La tutoría no existe")
         );
 
-        User user = (User) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
-        Tutor tutor = tutorRepository.findByUser(user);
-        if (tutor == null) {
+        UserEntity userEntity = (UserEntity) SecurityContextHolder.getContext().getAuthentication().getPrincipal();
+        TutorEntity tutorEntity = tutorRepository.findByUserEntity(userEntity);
+        if (tutorEntity == null) {
             throw new RuntimeException("El usuario no es un asesor, no puede calificar a un asesorado");
         }
 
-        if (!Objects.equals(tutorship.getTutor().getId(), tutor.getId())) {
+        if (!Objects.equals(tutorshipEntity.getTutorEntity().getId(), tutorEntity.getId())) {
             throw new RuntimeException("La evaluación del alumno en esta asesoría,  no corresponde a este asesor");
         }
 
-        if (evaluationTutoreeRepository.existsEvaluationTutoreeByTutorshipId(tutorship.getId())) {
+        if (evaluationTutoreeRepository.existsEvaluationTutoreeEntityByTutorshipEntityId(tutorshipEntity.getId())) {
             throw new RuntimeException("La tutoría ya ha sido evaluada");
         }
 
-        EvaluationTutoree evaluationTutoree = EvaluationTutoree.builder()
+        EvaluationTutoreeEntity evaluationTutoreeEntity = EvaluationTutoreeEntity.builder()
                 .calificacion(request.getRating())
                 .descripcion(request.getDescription())
-                .tutoree(tutorship.getTutoree())
-                .tutorship(tutorship)
+                .tutoree(tutorshipEntity.getTutoree())
+                .tutorshipEntity(tutorshipEntity)
                 .build();
 
-        evaluationTutoreeRepository.save(evaluationTutoree);
+        evaluationTutoreeRepository.save(evaluationTutoreeEntity);
     }
 
 

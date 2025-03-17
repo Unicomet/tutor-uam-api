@@ -27,8 +27,8 @@ public class TutorshipController {
         return ResponseEntity.ok().build();
     }
 
-    @GetMapping(value = "tutorships-for-tutoree")
-    public ResponseEntity<Object> getTutorshipsForTutoree() {
+    @GetMapping(value = "tutoree/{tutoreeId}", produces = "application/json")
+    public ResponseEntity<Object> getTutorshipsForTutoree(@PathVariable("tutoreeId") Integer tutoreeId) {
         try {
             TutorshipsListResponse tutorshipsResponse = tutorshipService.getTutorshipsForTutoree();
             return ResponseEntity.ok().body(tutorshipsResponse);
@@ -38,18 +38,17 @@ public class TutorshipController {
         }
     }
 
-    @GetMapping(value = "tutorships-for-tutor")
-    public ResponseEntity<Object> getTutorshipsForTutor() {
+    @GetMapping(value = "tutor/{tutorId}", produces = "application/json")
+    public ResponseEntity<Object> getTutorshipsForTutor(@PathVariable("tutorId") Integer tutorId) {
         try {
-            TutorshipsListResponse tutorshipsResponse = tutorshipService.getTutorshipsForTutor();
-            return ResponseEntity.ok().body(tutorshipsResponse);
+            return ResponseEntity.ok().body(tutorshipService.getTutorshipsForTutor());
         } catch (Exception e) {
             return ResponseEntity.badRequest().body(e.getMessage()
             );
         }
     }
 
-    @PostMapping(value = "evaluate-tutor", consumes = "application/json")
+    @PostMapping(value = "{tutuorshipId}/tutor/evaluate", consumes = "application/json")
     public ResponseEntity<String> evaluateTutor(@RequestBody EvaluationRequest request) {
         try {
             tutorshipService.evaluateTutorForTutorship(request);
@@ -59,7 +58,7 @@ public class TutorshipController {
         return ResponseEntity.ok().build();
     }
 
-    @PostMapping(value = "evaluate-tutoree", consumes = "application/json")
+    @PostMapping(value = "{tutorshipId}/tutoree/evaluate", consumes = "application/json")
     public ResponseEntity<String> evaluateTutoree(@RequestBody EvaluationRequest request) {
         try {
             tutorshipService.evaluateTutoreeForTutorship(request);
