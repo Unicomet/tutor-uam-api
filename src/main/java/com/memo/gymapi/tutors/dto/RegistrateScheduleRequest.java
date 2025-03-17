@@ -1,5 +1,7 @@
-package com.memo.gymapi.subjects.dto;
+package com.memo.gymapi.tutors.dto;
 
+import com.memo.gymapi.tutors.model.Day;
+import com.memo.gymapi.tutors.model.DayAvailability;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;

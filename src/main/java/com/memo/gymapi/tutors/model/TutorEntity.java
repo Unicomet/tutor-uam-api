@@ -1,7 +1,6 @@
 package com.memo.gymapi.tutors.model;
 
-import com.memo.gymapi.subjects.model.Availability;
-import com.memo.gymapi.user.model.User;
+import com.memo.gymapi.user.model.UserEntity;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +14,7 @@ import lombok.*;
         @Index(name = "fk_asesor_usuario1_idx", columnList = "usuario_id"),
         @Index(name = "fk_asesor_table11_idx", columnList = "disponibilidad")
 })
-public class Tutor {
+public class TutorEntity {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -36,7 +35,7 @@ public class Tutor {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 
     @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "disponibilidad")

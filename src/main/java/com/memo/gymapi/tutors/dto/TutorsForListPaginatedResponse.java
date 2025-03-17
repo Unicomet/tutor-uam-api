@@ -7,7 +7,7 @@ import java.util.List;
 
 @Getter
 @Setter
-public class TutorsForListPaginatedDto {
-    List<TutorForListDto> tutorForListDtoList;
+public class TutorsForListPaginatedResponse {
+    List<TutorForListDTO> tutorForListDtoList;
     Integer totalElements;
 }

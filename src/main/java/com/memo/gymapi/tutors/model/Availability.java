@@ -1,7 +1,5 @@
-package com.memo.gymapi.subjects.model;
+package com.memo.gymapi.tutors.model;
 
-import com.memo.gymapi.subjects.dto.Day;
-import com.memo.gymapi.tutors.model.Tutor;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
@@ -32,6 +30,6 @@ public class Availability {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "asesor_id", nullable = false)
-    private Tutor tutor;
+    private TutorEntity tutorEntity;
 
 }

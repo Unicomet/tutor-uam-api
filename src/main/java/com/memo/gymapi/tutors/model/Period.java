@@ -1,4 +1,4 @@
-package com.memo.gymapi.subjects.dto;
+package com.memo.gymapi.tutors.model;
 
 import lombok.Getter;
 import lombok.Setter;
