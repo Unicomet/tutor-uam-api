@@ -1,6 +1,5 @@
-package com.memo.gymapi.registration.model;
+package com.memo.gymapi.user.model;
 
-import com.memo.gymapi.user.model.User;
 import jakarta.persistence.*;
 import lombok.*;
 
@@ -15,7 +14,7 @@ import java.math.BigDecimal;
 @Table(name = "asesorado", indexes = {
         @Index(name = "fk_asesorado_usuario1_idx", columnList = "usuario_id")
 })
-public class Tutoree {
+public class TutoreeEntity {
     @Id
     @Column(name = "_id", nullable = false)
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -26,6 +25,6 @@ public class Tutoree {
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
     @JoinColumn(name = "usuario_id", nullable = false)
-    private User user;
+    private UserEntity userEntity;
 
 }

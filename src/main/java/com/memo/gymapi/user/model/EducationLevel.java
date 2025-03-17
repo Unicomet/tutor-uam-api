@@ -1,4 +1,4 @@
-package com.memo.gymapi.registration.model;
+package com.memo.gymapi.user.model;
 
 public enum EducationLevel {
     Licenciatura,

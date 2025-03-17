@@ -17,7 +17,7 @@ import java.util.List;
 @Table(name = "usuario", uniqueConstraints = {
         @UniqueConstraint(name = "correo", columnNames = {"correo"})
 })
-public class User implements UserDetails {
+public class UserEntity implements UserDetails {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "_id")
