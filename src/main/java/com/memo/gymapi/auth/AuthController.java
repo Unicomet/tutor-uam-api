@@ -1,32 +1,29 @@
 package com.memo.gymapi.auth;
 
-import com.memo.gymapi.registration.requests.RegistrationRequest;
-import com.memo.gymapi.registration.service.RegistrationService;
+import com.memo.gymapi.auth.exceptions.InvalidCredentialsException;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.security.core.AuthenticationException;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/auth")
 @RequiredArgsConstructor
 public class AuthController {
     private final AuthService authService;
-    private final RegistrationService registrationService;
 
-    @PostMapping(value = "login", consumes="application/json")
-    public ResponseEntity<AuthResponse> login(@RequestBody LoginRequest request){
-        try {
-            AuthResponse response = authService.login(request);
-            return ResponseEntity.ok(response);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
-        }
+    @PostMapping(value = "login", consumes = "application/json")
+    public AuthResponse login(@Valid @RequestBody LoginRequest request) throws EntityNotFoundException, InvalidCredentialsException, AuthenticationException {
+        return authService.login(request);
     }
 
-    @PostMapping(value = "register", consumes="application/json")
-    public ResponseEntity<AuthResponse> register(@RequestBody RegisterRequest request){
-        return ResponseEntity.ok(authService.register(request));
+    @PostMapping(value = "register", consumes = "application/json")
+    public AuthResponse register(@RequestBody RegisterRequest request) {
+        return authService.register(request);
     }
 
 }

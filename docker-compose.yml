@@ -1,0 +1,28 @@
+services:
+  postgres:
+    container_name: postgres-db-asesoria
+    image: postgres
+    environment:
+      POSTGRES_USER: root
+      POSTGRES_PASSWORD: root
+      POSTGRES_DB: asesoria_db
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres:/var/lib/postgresql/data
+    networks:
+      - spring-boot-network
+  spring-boot-app:
+    container_name: tutor-aum-api
+    image: spring/tutor-uam-api
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-boot-network
+
+volumes:
+  postgres:
+
+networks:
+  spring-boot-network:
+    driver: bridge
